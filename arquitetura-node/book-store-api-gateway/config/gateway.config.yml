@@ -1,0 +1,92 @@
+http:
+  port: ${PORT}
+https:
+  port: ${PORT}
+admin:
+  port: 9876
+  hostname: localhost
+apiEndpoints:
+  authenticationAPI:
+    host: ${HOST}
+    paths:
+      - '/authentication/*'
+  paymentAPI:
+    host: ${HOST}
+    paths:
+      - '/payment/*'
+  auditAPI:
+    host: ${HOST}
+    paths:
+      - '/audit/*'
+  libraryAPI:
+    host: ${HOST}
+    paths:
+      - '/library/*'
+serviceEndpoints:
+  authenticationService:
+    url: 'http://localhost:52016'
+  paymentService:
+    url: 'https://api-payment.herokuapp.com'
+  auditService:
+    url: 'http://localhost:3000'
+  libraryService:
+    url: 'http://localhost:5000'
+  exampleService:
+    url: 'http://httpbin.org/'
+policies:
+  - expression
+  - proxy
+pipelines:
+  - name: authentication
+    apiEndpoints:
+      - authenticationAPI
+    policies:
+      - expression:
+        - action:
+            jscode: |
+              if (req.url.startsWith('/authentication')) {
+                req.url = req.url.replace(/\/authentication/, '');
+              }
+      - proxy:
+        - action:
+            serviceEndpoint: authenticationService
+  - name: payment
+    apiEndpoints:
+      - paymentAPI
+    policies:
+      - expression:
+        - action:
+            jscode: |
+              if (req.url.startsWith('/payment')) {
+                req.url = req.url.replace(/\/payment/, '');
+              }
+      - proxy:
+        - action:
+            serviceEndpoint: paymentService
+            changeOrigin: true
+  - name: audit
+    apiEndpoints:
+      - auditAPI
+    policies:
+      - expression:
+        - action:
+            jscode: |
+              if (req.url.startsWith('/audit')) {
+                req.url = req.url.replace(/\/audit/, '');
+              }
+      - proxy:
+        - action:
+            serviceEndpoint: auditService
+  - name: library
+    apiEndpoints:
+      - libraryAPI
+    policies:
+      - expression:
+        - action:
+            jscode: |
+              if (req.url.startsWith('/library')) {
+                req.url = req.url.replace(/\/library/, '');
+              }
+      - proxy:
+        - action:
+            serviceEndpoint: libraryService

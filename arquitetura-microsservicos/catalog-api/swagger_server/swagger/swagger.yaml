@@ -1,0 +1,94 @@
+---
+swagger: "2.0"
+info:
+  description: "API para catálogo de produtos"
+  version: "1.0.0"
+  title: "CatalogApi"
+  contact:
+    email: "lucasmedeiros1994@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/bylucasxdx/CatalogApi/1.0.0"
+tags:
+- name: "products"
+  description: "Produtos"
+schemes:
+- "https"
+paths:
+  /products:
+    get:
+      tags:
+      - "products"
+      summary: "Busca de produtos"
+      description: "Enviando informações é possível encontrar produtos no sistema\n"
+      operationId: "search_products"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "nameProduct"
+        in: "query"
+        description: "Enviando uma string opcional é possível filtrar os produtos"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "Máximo de itens que podem ser retornados"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "Resultados encontrados com sucesso"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/ProductItem"
+        400:
+          description: "bad input parameter"
+      x-swagger-router-controller: "swagger_server.controllers.products_controller"
+    post:
+      tags:
+      - "products"
+      summary: "Adiciona um produto novo na lista"
+      description: "Adiciona um novo produto ao sistema"
+      operationId: "add_product"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "produto"
+        description: "Produto que será adicionado"
+        required: false
+        schema:
+          $ref: "#/definitions/ProductItem"
+      responses:
+        201:
+          description: "Produto cadastrado"
+        400:
+          description: "Dados inválidos"
+        409:
+          description: "O produto já existe"
+      x-swagger-router-controller: "swagger_server.controllers.products_controller"
+definitions:
+  ProductItem:
+    type: "object"
+    required:
+    - "id"
+    - "name"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: "string"
+        example: "Camisa G - Projeto"
+    example:
+      name: "Camisa G - Projeto"
+      id: "d290f1ee-6c54-4b01-90e6-d701748f0851"

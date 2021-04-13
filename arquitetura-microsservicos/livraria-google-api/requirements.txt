@@ -1,0 +1,7 @@
+requests
+json_encoder
+Flask
+tinydb
+pytest
+coverage
+pytest-cov

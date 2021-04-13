@@ -1,0 +1,99 @@
+---
+swagger: "2.0"
+info:
+  description: "API para mostrar campanhas de marketing"
+  version: "1.0.0"
+  title: "MarketingApi"
+  contact:
+    email: "lucasmedeiros1994@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/bylucasxdx/MarketingApi/1.0.0"
+tags:
+- name: "campanhas"
+  description: "Campanhas"
+schemes:
+- "https"
+paths:
+  /campanhas:
+    get:
+      tags:
+      - "campanhas"
+      summary: "Busca das campanhas de marketing"
+      description: "Enviando informações é possível encontrar campanhas de marketing\n"
+      operationId: "search_campanhas"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "nomeCampanha"
+        in: "query"
+        description: "Enviando uma string opcional é possível filtrar as campanhas\
+          \ de marketing atuais"
+        required: false
+        type: "string"
+      - name: "limit"
+        in: "query"
+        description: "Máximo de itens que podem ser retornados"
+        required: false
+        type: "integer"
+        maximum: 50
+        minimum: 0
+        format: "int32"
+      responses:
+        200:
+          description: "Resultados encontrados com sucesso"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/CampanhaItem"
+        400:
+          description: "Erro nos parâmetros"
+      x-swagger-router-controller: "swagger_server.controllers.campanhas_controller"
+    post:
+      tags:
+      - "campanhas"
+      summary: "Adiciona uma nova campanha na lista"
+      description: "Adiciona uma nova campanha na lista de marketing"
+      operationId: "add_campanha"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "produto"
+        description: "Campanha que será adicionada"
+        required: false
+        schema:
+          $ref: "#/definitions/CampanhaItem"
+      responses:
+        201:
+          description: "Campanha cadastrada"
+        400:
+          description: "Dados inválidos"
+        409:
+          description: "A campanha que deseja inserir já existe"
+      x-swagger-router-controller: "swagger_server.controllers.campanhas_controller"
+definitions:
+  CampanhaItem:
+    type: "object"
+    required:
+    - "id"
+    - "name"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+      name:
+        type: "string"
+        example: "Campanha de exemplo"
+      public:
+        type: "string"
+        example: "Pessoas com mais de 18 anos"
+    example:
+      public: "Pessoas com mais de 18 anos"
+      name: "Campanha de exemplo"
+      id: "d290f1ee-6c54-4b01-90e6-d701748f0851"

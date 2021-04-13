@@ -1,0 +1,20 @@
+version: "2"
+services:
+    proxy:
+        image: nginx
+        depends_on:
+          - springboot
+    springboot:
+        image: etiennek/spring-boot
+        ports:
+          - "8080:80"
+        depends_on:
+          - postgres
+    postgres:
+        image: postgres
+        ports:
+          - "5432:5432"
+        environment:
+          - POSTGRES_PASSWORD=senha
+          - POSTGRES_USER=user
+          - POSTGRES_DB=mydatabase

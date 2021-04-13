@@ -1,0 +1,20 @@
+version: "2"
+services:
+    proxy:
+        image: httpd
+        depends_on:
+          - netcore
+    netcore:
+        image: microsoft/dotnet:2.1-aspnetcore-runtime
+        ports:
+          - "8080:80"
+        depends_on:
+          - sqlserver
+    sqlserver:
+        image: microsoft/mssql-server-linux
+        ports:
+          - "1433:1433"
+        environment:
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: StrongPassw0rd
+        restart: always
